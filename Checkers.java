@@ -51,12 +51,6 @@ public class Checkers
 
     public boolean gameOver() { return gameOver; }
 
-    public void printPossibleMoves(boolean red)
-    {
-        Vector<Move> moves = getPossibleMoves(red);
-        for (Move move : moves)
-            System.out.println(move.movingPiece.prettyPos() + " -> " + move.moveTo.prettyPos());
-    }
 
     public Vector<Move> getPossibleMoves(boolean red)
     {
@@ -214,8 +208,9 @@ public class Checkers
         System.out.print("\n");
     }
 
-    public void printMenu()
+    public int printAndEvaluateMenu()
     {
+        Scanner scanner = new Scanner(System.in);
         if (redTurn)
         {
             System.out.println("  Red's turn!");
@@ -228,14 +223,85 @@ public class Checkers
             System.out.println("  1. Show Available Moves");
             System.out.println("  2. Resign");
         }
+        System.out.print("  Enter selection: ");
+        int index = scanner.nextInt();
+        if (index == 1)
+        {
+            return 0;
+        }
+        else if(index == 2)
+        {
+            return 1;
+        }
+        else
+        {
+            return -1;
+        }
+    }
+
+    public void resign()
+    {
+        if (redTurn)
+        {
+            System.out.println("  Red resigns! Black wins!");
+        }
+        else
+        {
+            System.out.println("  Black resigns! Red wins!");
+        }
+    }
+
+    public void printPossibleMoves(boolean red)
+    {
+        Vector<Move> moves = getPossibleMoves(red);
+        for (Move move : moves)
+            System.out.println(move.movingPiece.prettyPos() + " -> " + move.moveTo.prettyPos());
+    }
+
+    public int printAndEvaluateTurn()
+    {
+        Vector<Move> moves = getPossibleMoves(redTurn);
+        for (int i = 0; i < moves.size(); i++)
+        {
+            System.out.println("  " + (i+1) + ": " + moves.get(i).movingPiece.prettyPos() + " -> " + moves.get(i).moveTo.prettyPos());
+        }
+        System.out.print("  Enter selection: ");
+        Scanner scanner = new Scanner(System.in);
+        int index = scanner.nextInt();
+        if (index-1 < 0 || index-1 > moves.size()-1)
+        {
+            System.out.println("Invalid input");
+            return -1;
+        }
+
+        return -1;
     }
 
     public void play()
     {
     //    while (!gameOver)
     //    {
-            printBoard();
-            printMenu();
+            int menuRet = -1;
+            while (menuRet == -1)
+            {
+                printBoard();
+                menuRet = printAndEvaluateMenu();
+            }
+            if (menuRet == 1)
+            {
+                //Do Resign and clean up;
+                resign();
+                return;
+            }
+            else
+            {
+                int turnRet = -1;
+                while(turnRet == -1)
+                {
+                    turnRet = printAndEvaluateTurn();
+                }
+                //Do turn
+            }
     //    }
     }
 
