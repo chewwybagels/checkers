@@ -309,6 +309,5 @@ public class Checkers
     {
         Checkers game = new Checkers();
         game.play();
-
     }
 }
